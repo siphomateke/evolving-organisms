@@ -1,6 +1,7 @@
 import prop from './properties';
 import {random, randomF, Vector, radialCoords} from './utils';
 import {Store} from './globals';
+import {neat} from './genetics';
 
 export default class Creature {
   constructor(genome) {
@@ -160,29 +161,38 @@ export default class Creature {
   render(canvas) {
     let ctx = canvas.getContext('2d');
 
+    let opacity = 1;
+    if (neat.getFittest().score === this.brain.score) {
+      opacity = 1;
+    } else {
+      opacity = 0.1;
+    }
+
     // Render receptors
-    ctx.strokeStyle = 'rgb(0,0,0)';
-    ctx.fillStyle = 'rgb(200,200,0)';
-    for (let r=0; r<this.receptors.length; r++) {
-      ctx.beginPath();
-      ctx.moveTo(
-        this.location.x-canvas.screenOffset.x,
-        this.location.y-canvas.screenOffset.y);
-      ctx.lineTo(
-        this.receptors[r].location.x-canvas.screenOffset.x,
-        this.receptors[r].location.y-canvas.screenOffset.y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(
-        this.receptors[r].location.x-canvas.screenOffset.x,
-        this.receptors[r].location.y-canvas.screenOffset.y, (this.size/2), 0, Math.PI*2);
-      ctx.fill();
+    if (prop.renderReceptors) {
+      ctx.strokeStyle = 'rgba(0,0,0,'+opacity+')';
+      ctx.fillStyle = 'rgba(200,200,0,'+opacity+')';
+      for (let r=0; r<this.receptors.length; r++) {
+        ctx.beginPath();
+        ctx.moveTo(
+          this.location.x-canvas.screenOffset.x,
+          this.location.y-canvas.screenOffset.y);
+        ctx.lineTo(
+          this.receptors[r].location.x-canvas.screenOffset.x,
+          this.receptors[r].location.y-canvas.screenOffset.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(
+          this.receptors[r].location.x-canvas.screenOffset.x,
+          this.receptors[r].location.y-canvas.screenOffset.y, (this.size/2), 0, Math.PI*2);
+        ctx.fill();
+      }
     }
 
     // Render core
     ctx.beginPath();
-    ctx.fillStyle = 'rgb(255,0,0)';
-    ctx.strokeStyle = 'rgb(50,50,50)';
+    ctx.fillStyle = 'rgba(255,0,0,'+opacity+')';
+    ctx.strokeStyle = 'rgba(50,50,50,'+opacity+')';
     ctx.arc(
       this.location.x-canvas.screenOffset.x,
       this.location.y-canvas.screenOffset.y, this.size, 0, Math.PI*2);
@@ -190,7 +200,7 @@ export default class Creature {
     ctx.stroke();
 
     // Render head
-    ctx.fillStyle = 'rgb(50,50,50)';
+    ctx.fillStyle = 'rgba(50,50,50,'+opacity+')';
     ctx.beginPath();
     ctx.arc(
       this.head.x-canvas.screenOffset.x,

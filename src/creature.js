@@ -102,6 +102,7 @@ export default class Creature {
     this.age += sec;
     this.lifeTime -= sec;
     this.brain.score = this.getFitness();
+    Store.highestScore = this.brain.score > Store.highestScore ? this.brain.score : Store.highestScore;
 
     for (let f=0; f<Store.foods.length; f++) {
       if (this.location.sub(Store.foods[f].location).mag()<this.size+Store.foods[f].size) {
@@ -162,10 +163,10 @@ export default class Creature {
     let ctx = canvas.getContext('2d');
 
     let opacity = 1;
-    if (neat.getFittest().score === this.brain.score) {
+    if (Store.highestScore === this.brain.score) {
       opacity = 1;
     } else {
-      opacity = 0.1;
+      opacity = this.brain.score / Store.highestScore;
     }
 
     // Render receptors

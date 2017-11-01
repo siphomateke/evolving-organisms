@@ -5,11 +5,11 @@ let prop = {
   noOutputs: 3,
   noReceptors: 3,
   receptorLen: 20,
-  creatureSpeed: 0.02,
+  creatureSpeed: 0.05,
   maxRotationForce: 5,
   creatureLifeTime: 10,
 
-  creatureAmount: 150,
+  creatureAmount: 100,
 
   // NEAT settings
   elitismPercent: 0.1,
@@ -21,6 +21,7 @@ let prop = {
   // Rendering
   renderFont: 'Calibri',
   renderReceptors: false,
+  renderHead: true,
 
   // Fitness rules
   movementNeedsEnergy: false,

@@ -14,6 +14,8 @@ let prop = {
   // NEAT settings
   elitismPercent: 0.1,
   mutationRate: 0.3,
+  /** The number of times the population will be mutated initially */
+  initialMutation: 100,
   medialNeurons: 40,
 
   timeout: 50,

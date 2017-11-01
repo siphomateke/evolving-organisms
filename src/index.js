@@ -21,7 +21,7 @@ let timer = 0;
 function init() {
   initNeat();
 
-  for (let i = 0; i < 1; i++) neat.mutate();
+  for (let i = 0; i < prop.initialMutation; i++) neat.mutate();
 
   for (let f=0; f<prop.foodAmount; f++) {
     new Food();

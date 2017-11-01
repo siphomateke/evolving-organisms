@@ -159,15 +159,27 @@ export default class Creature {
     this.head = new Vector(radialCoords(this.angle-90, this.size/2).x+this.location.x, radialCoords(this.angle-90, this.size/2).y+this.location.y);
   }
 
+  fitnessColor(value, max) {
+    let power = 1 - Math.min(value/max, 1);
+    let color = [255, 255, 0];
+
+    if (power < 0.5) {
+      color[0] = 2 * power * 255;
+    } else {
+      color[1] = (1.0 - 2 * (power - 0.5)) * 255;
+    }
+
+    for (let i=0; i<color.length; i++) {
+      color[i] = Math.floor(color[i]);
+    }
+
+    return color;
+  }
+
   render(canvas) {
     let ctx = canvas.getContext('2d');
 
     let opacity = 1;
-    if (Store.highestScore === this.brain.score) {
-      opacity = 1;
-    } else {
-      opacity = this.brain.score / Store.highestScore;
-    }
 
     // Render receptors
     if (prop.renderReceptors) {
@@ -190,9 +202,10 @@ export default class Creature {
       }
     }
 
+    let color = this.fitnessColor(this.brain.score, Store.highestScore);
     // Render core
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255,0,0,'+opacity+')';
+    ctx.fillStyle = 'rgba('+color[0]+','+color[1]+','+color[2]+','+opacity+')';
     ctx.strokeStyle = 'rgba(50,50,50,'+opacity+')';
     ctx.arc(
       this.location.x-canvas.screenOffset.x,

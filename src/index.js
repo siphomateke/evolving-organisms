@@ -2,6 +2,7 @@ import prop from './properties';
 import Creature from './creature';
 import {foods} from './globals';
 import {canvas} from './canvas';
+import {writeText} from './utils';
 
 canvas.width = prop.world.width;
 canvas.height = prop.world.height;
@@ -23,12 +24,13 @@ function render() {
       foods[e].render(canvas);
     }
   }
+  writeText(canvas, [Math.round(fps).toString()]);
 }
 
 let then = Date.now();
-let fps = 30;
+let fps = 60;
 let maxFPS = 120;
-let timestep=1000/20;
+let timestep=1000/fps;
 let framesThisSecond = 0;
 let lastFpsUpdate = 0;
 let delta = 0;

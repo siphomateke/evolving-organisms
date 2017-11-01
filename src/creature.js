@@ -65,7 +65,7 @@ export default class Creature {
   }
 
   getFitness() {
-    return ((this.age/prop.timeout)+(this.lifeTime/prop.creatureLifeTime))*20;
+    return ((this.age/prop.timeout)+(this.lifeTime/prop.creatureLifeTime))/2;
   }
 
   update(sec) {
@@ -80,7 +80,7 @@ export default class Creature {
     if (this.angularForce>-prop.maxRotationForce) {
       this.angularForce-=output[1]*ms;
     }
-    this.speed = output[2]*prop.creatureSpeed;
+    this.speed = (output[2]-0.5)*prop.creatureSpeed;
 
     // Collision with world boundaries
     if (this.location.x>prop.world.width-this.size) {
@@ -214,11 +214,13 @@ export default class Creature {
     ctx.stroke();
 
     // Render head
-    ctx.fillStyle = 'rgba(50,50,50,'+opacity+')';
-    ctx.beginPath();
-    ctx.arc(
-      this.head.x-canvas.screenOffset.x,
-      this.head.y-canvas.screenOffset.y, this.size/2, 0, Math.PI*2);
-    ctx.fill();
+    if (prop.renderHead) {
+      ctx.fillStyle = 'rgba(50,50,50,'+opacity+')';
+      ctx.beginPath();
+      ctx.arc(
+        this.head.x-canvas.screenOffset.x,
+        this.head.y-canvas.screenOffset.y, this.size/2, 0, Math.PI*2);
+      ctx.fill();
+    }
   }
 }

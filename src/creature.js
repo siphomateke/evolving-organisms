@@ -3,17 +3,16 @@ import {random, randomF, Vector, radialCoords} from './utils';
 import {foods, creatures} from './globals';
 
 export default class Creature {
-  constructor() {
+  constructor(genome) {
     this.size = 10;
     this.angle = random(360);
     this.speed = prop.creatureSpeed;
     this.lifeTime = prop.creatureLifeTime;
     this.alive = true;
     this.age = 0;
-    this.globalRank = 0;
-    this.localRank = 0;
-    this.fitness = 0;
-    this.bias = randomF(-2, 2);
+
+    this.brain = genome;
+    this.brain.score = 0;
 
     // Motion variables
     this.location = new Vector(
@@ -51,26 +50,36 @@ export default class Creature {
     this.age = 0;
     this.angle = random(360);
     this.lifeTime = prop.creatureLifeTime;
-    this.globalRank = 0;
-    this.localRank = 0;
-    this.fitness = 0;
     this.location = new Vector(
       random(prop.world.width),
       random(prop.world.height));
   }
 
+  sense() {
+    let input = [];
+    for (let r=0; r<this.receptors.length; r++) {
+      input[r] = this.receptors[r].scent;
+    }
+    return input;
+  }
+
+  getFitness() {
+    return ((this.age/prop.timeout)+(this.lifeTime/prop.creatureLifeTime))*20;
+  }
+
   update(sec) {
     let ms = sec*1000;
 
-    /* let r = this.genome.evaluateNetwork(this);
+    let input = this.sense(); // FIXME: add input
+    let output = this.brain.activate(input);
 
-    if (this.angular_force<prop.maxRotationForce) {
-      this.angular_force+=r[0]*ms;
+    if (this.angularForce<prop.maxRotationForce) {
+      this.angularForce+=output[0]*ms;
     }
-    if (this.angular_force>-prop.maxRotationForce) {
-      this.angular_force-=r[1]*ms;
+    if (this.angularForce>-prop.maxRotationForce) {
+      this.angularForce-=output[1]*ms;
     }
-    this.speed = r[2]*creatureSpeed;*/
+    this.speed = output[2]*prop.creatureSpeed;
 
     // Collision with world boundaries
     if (this.location.x>prop.world.width-this.size) {
@@ -91,7 +100,7 @@ export default class Creature {
     // Update internal clocks
     this.age += sec;
     this.lifeTime -= sec;
-    this.fitness = ((this.age/prop.timeout)+(this.lifeTime/prop.creatureLifeTime))*20;
+    this.brain.score = this.getFitness();
 
     for (let f=0; f<foods.length; f++) {
       if (this.location.sub(foods[f].location).mag()<this.size+foods[f].size) {

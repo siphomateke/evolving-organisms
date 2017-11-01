@@ -70,7 +70,7 @@ export default class Creature {
   update(sec) {
     let ms = sec*1000;
 
-    let input = this.sense(); // FIXME: add input
+    let input = this.sense();
     let output = this.brain.activate(input);
 
     if (this.angularForce<prop.maxRotationForce) {

@@ -5,7 +5,7 @@ import {foods, entities, Store} from './globals';
 export default class Food {
   constructor() {
     this.alive = true;
-    this.size = random(5, prop.food_size);
+    this.size = random(5, prop.foodSize);
     this.location = new Vector(
       random(prop.world.width),
       random(prop.world.height));

@@ -8,25 +8,28 @@ let prop = {
   maxRotationForce: 5,
   creatureLifeTime: 10,
 
-  creature_amount: 150,
-  target_species: 10,
-  target_fitness: 50,
+  creatureAmount: 150,
+
+  // NEAT settings
+  elitismPercent: 0.5,
+  mutationRate: 0.01,
+  medialNeurons: 40,
 
   timeout: 50,
 
   // Rendering
-  render_font: 'Calibri',
+  renderFont: 'Calibri',
 
   // Fitness rules
   movementNeedsEnergy: false,
 
   // Food global variables
-  food_amount: 50,
-  food_size: 5,
+  foodAmount: 50,
+  foodSize: 5,
   debug: false,
   world: {
-    width: 500,
-    height: 500,
+    width: 900,
+    height: 600,
   },
 };
 

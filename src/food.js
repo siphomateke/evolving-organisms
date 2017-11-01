@@ -1,6 +1,6 @@
 import {Vector, random} from './utils';
 import prop from './properties';
-import {foods, entities, Store} from './globals';
+import {Store} from './globals';
 
 export default class Food {
   constructor() {
@@ -11,14 +11,9 @@ export default class Food {
       random(prop.world.height));
 
     // Push this entity to the list and give it an id
-    foods.push(this);
+    Store.foods.push(this);
     this.food_id = Store.maxFoodId;
     Store.maxFoodId++;
-
-    // Push this entity to the list and give it an id
-    entities.push(this);
-    this.entity_id = Store.maxEntityId;
-    Store.maxEntityId++;
   }
   update(sec) {
 
@@ -38,15 +33,10 @@ export default class Food {
 
   // Remove food from the list when eaten
   eat() {
-    for (let f=0; f<foods.length; f++) {
-      if (foods[f].food_id == this.food_id) {
-        foods.splice(f, 1);
+    for (let f=0; f<Store.foods.length; f++) {
+      if (Store.foods[f].food_id == this.food_id) {
+        Store.foods.splice(f, 1);
         new Food();
-      }
-    }
-    for (let e=0; e<entities.length; e++) {
-      if (entities[e].entity_id == this.entity_id) {
-        entities.splice(e, 1);
       }
     }
   }

@@ -1,6 +1,6 @@
 import prop from './properties';
 import {random, randomF, Vector, radialCoords} from './utils';
-import {foods, creatures} from './globals';
+import {Store} from './globals';
 
 export default class Creature {
   constructor(genome) {
@@ -102,10 +102,10 @@ export default class Creature {
     this.lifeTime -= sec;
     this.brain.score = this.getFitness();
 
-    for (let f=0; f<foods.length; f++) {
-      if (this.location.sub(foods[f].location).mag()<this.size+foods[f].size) {
-        this.lifeTime+=foods[f].size;
-        foods[f].eat();
+    for (let f=0; f<Store.foods.length; f++) {
+      if (this.location.sub(Store.foods[f].location).mag()<this.size+Store.foods[f].size) {
+        this.lifeTime+=Store.foods[f].size;
+        Store.foods[f].eat();
       }
     }
 
@@ -144,12 +144,12 @@ export default class Creature {
         radialCoords(theta, prop.receptorLen).y+this.location.y);
       let totalScent = 0;
       if (this.receptors[r].type == 0) {
-        for (let f=0; f<foods.length; f++) {
-          totalScent+=1/Math.pow(this.receptors[r].location.sub(foods[f].location).mag()*0.01, 3);
+        for (let f=0; f<Store.foods.length; f++) {
+          totalScent+=1/Math.pow(this.receptors[r].location.sub(Store.foods[f].location).mag()*0.01, 3);
         }
       } else {
-        for (let f=0; f<creatures.length; f++) {
-          totalScent+=1/Math.pow(this.receptors[r].location.sub(creatures[f].location).mag()*0.01, 3);
+        for (let f=0; f<Store.creatures.length; f++) {
+          totalScent+=1/Math.pow(this.receptors[r].location.sub(Store.creatures[f].location).mag()*0.01, 3);
         }
       }
       this.receptors[r].scent = totalScent;

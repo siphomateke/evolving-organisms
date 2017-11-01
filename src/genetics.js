@@ -5,6 +5,8 @@ import {Store} from './globals';
 
 export let neat = null;
 export function initNeat() {
+  neataptic.methods.mutation.MOD_ACTIVATION.mutateOutput = false;
+  neataptic.methods.mutation.SWAP_NODES.mutateOutput = false;
   neat = new neataptic.Neat(prop.noReceptors, prop.noOutputs, null, {
     mutation: neataptic.methods.mutation.ALL,
     popsize: prop.creatureAmount,

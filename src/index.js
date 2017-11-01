@@ -46,6 +46,10 @@ function update(sec) {
     }
   }
 
+  if (neat.generation > prop.slowDownOnGeneration) {
+    prop.accelerated = false;
+  }
+
   if (timer > prop.timeout || !anyAlive) {
     timer=0;
     endEvaluation();

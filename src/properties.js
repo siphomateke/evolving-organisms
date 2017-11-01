@@ -1,6 +1,7 @@
 let prop = {
   accelerated: false,
   acceleration: 40,
+  slowDownOnGeneration: 50,
   noOutputs: 3,
   noReceptors: 3,
   receptorLen: 20,

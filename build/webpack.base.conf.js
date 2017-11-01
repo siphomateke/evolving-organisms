@@ -1,11 +1,13 @@
 let utils = require('./utils');
 let CopyWebpackPlugin = require('copy-webpack-plugin');
-let CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
   entry: './src/index.js',
   output: {
     filename: './dist/bundle.js',
+  },
+  node: {
+    child_process: 'empty',
   },
   resolve: {
     alias: {
@@ -61,20 +63,8 @@ module.exports = {
       {
         from: utils.resolve('./static'),
         to: './dist/',
-        /* ignore: ['.*'], */
+        ignore: ['.*'],
       },
     ]),
-    new CircularDependencyPlugin({
-      // exclude detection of files based on a RegExp
-      exclude: /a\.js|node_modules/,
-      // add errors to webpack instead of warnings
-      failOnError: true,
-      // override `exclude` and `failOnError` behavior
-      // `onDetected` is called for each module that is cyclical
-      onDetected({paths, compilation}) {
-        // `paths` will be an Array of the relative module paths that make up the cycle
-        compilation.errors.push(new Error('Circular dependency: ' + paths.join(' -> ')));
-      },
-    }),
   ],
 };

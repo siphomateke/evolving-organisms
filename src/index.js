@@ -63,7 +63,9 @@ function render() {
   }
 
   for (let creature of Store.creatures) {
-    creature.render(canvas);
+    if (creature.alive) {
+      creature.render(canvas);
+    }
   }
 
   writeText(canvas, [Math.round(fps).toString()]);

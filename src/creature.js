@@ -1,5 +1,5 @@
 import prop from './properties';
-import {random, Vector, radialCoords} from './utils';
+import {random, randomF, Vector, radialCoords} from './utils';
 import {foods, creatures} from './globals';
 
 export default class Creature {
@@ -13,7 +13,7 @@ export default class Creature {
     this.globalRank = 0;
     this.localRank = 0;
     this.fitness = 0;
-    this.bias = (Math.random()*4)-2;
+    this.bias = randomF(-2, 2);
 
     // Motion variables
     this.location = new Vector(
@@ -151,10 +151,29 @@ export default class Creature {
   render(canvas) {
     let ctx = canvas.getContext('2d');
 
+    // Render receptors
+    ctx.strokeStyle = 'rgb(0,0,0)';
+    ctx.fillStyle = 'rgb(200,200,0)';
+    for (let r=0; r<this.receptors.length; r++) {
+      ctx.beginPath();
+      ctx.moveTo(
+        this.location.x-canvas.screenOffset.x,
+        this.location.y-canvas.screenOffset.y);
+      ctx.lineTo(
+        this.receptors[r].location.x-canvas.screenOffset.x,
+        this.receptors[r].location.y-canvas.screenOffset.y);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(
+        this.receptors[r].location.x-canvas.screenOffset.x,
+        this.receptors[r].location.y-canvas.screenOffset.y, (this.size/2), 0, Math.PI*2);
+      ctx.fill();
+    }
+
     // Render core
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255,0,0)';
-    ctx.strokeStyle = 'rgba(50,50,50)';
+    ctx.fillStyle = 'rgb(255,0,0)';
+    ctx.strokeStyle = 'rgb(50,50,50)';
     ctx.arc(
       this.location.x-canvas.screenOffset.x,
       this.location.y-canvas.screenOffset.y, this.size, 0, Math.PI*2);
@@ -162,7 +181,7 @@ export default class Creature {
     ctx.stroke();
 
     // Render head
-    ctx.fillStyle = 'rgba(50,50,50)';
+    ctx.fillStyle = 'rgb(50,50,50)';
     ctx.beginPath();
     ctx.arc(
       this.head.x-canvas.screenOffset.x,

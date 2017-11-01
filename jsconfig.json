@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "checkJs": true,
+    "baseUrl": "."
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "typeAcquisition": {
+    "include": []
+  }
+}

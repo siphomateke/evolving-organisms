@@ -2,15 +2,48 @@ import prop from './properties';
 import {Store} from './globals';
 import {canvas} from './canvas';
 import {writeText} from './utils';
+import {initNeat, startEvaluation, endEvaluation, neat} from './genetics';
 
 canvas.width = prop.world.width;
 canvas.height = prop.world.height;
+
+let then = Date.now();
+let fps = 60;
+let maxFPS = 120;
+let timestep=1000/fps;
+let framesThisSecond = 0;
+let lastFpsUpdate = 0;
+let delta = 0;
+
+let timer = 0;
+
+function init() {
+  initNeat();
+
+  for (let i = 0; i < 1; i++) neat.mutate();
+
+  startEvaluation();
+}
 
 function update(sec) {
   for (let e=0; e<Store.foods.length; e++) {
     if (Store.foods[e].alive) {
       Store.foods[e].update(sec);
     }
+  }
+
+  timer+=sec;
+  let anyAlive = false;
+  for (let creature of Store.creatures) {
+    if (creature.alive===true) {
+      anyAlive = true;
+      creature.update(sec);
+    }
+  }
+
+  if (timer > prop.timeout || !anyAlive) {
+    timer=0;
+    endEvaluation();
   }
 }
 
@@ -23,16 +56,13 @@ function render() {
       Store.foods[e].render(canvas);
     }
   }
+
+  for (let creature of Store.creatures) {
+    creature.render(canvas);
+  }
+
   writeText(canvas, [Math.round(fps).toString()]);
 }
-
-let then = Date.now();
-let fps = 60;
-let maxFPS = 120;
-let timestep=1000/fps;
-let framesThisSecond = 0;
-let lastFpsUpdate = 0;
-let delta = 0;
 
 function mainLoop() {
   let now = Date.now();
@@ -71,4 +101,5 @@ function mainLoop() {
   requestAnimationFrame(mainLoop);
 }
 
+init();
 mainLoop();

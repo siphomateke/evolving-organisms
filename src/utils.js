@@ -1,10 +1,16 @@
-export function random(min, max) {
+import prop from './properties';
+
+export function randomF(min, max) {
   if (max) {
-    return ~~(Math.random()*(max-min))+min;
+    return (Math.random()*(max-min))+min;
   } else {
     let range = min;
-    return ~~(Math.random()*range);
+    return Math.random()*range;
   }
+}
+
+export function random(min, max) {
+  return ~~randomF(min, max);
 }
 
 export function radialCoords(theta, radius) {
@@ -126,7 +132,7 @@ export class Vector {
     }
     return angle;
   }
-  set_angle(angle, mag) {
+  setAngle(angle, mag) {
     let p = new Vector(this.x, this.y);
     mag = mag==undefined ? 1 : mag;
     p.x = radialCoords(angle, mag).x;
@@ -148,8 +154,8 @@ export function writeText(canvas, txt) {
   let ctx = canvas.getContext('2d');
   for (let t=0; t<txt.length; t++) {
     ctx.fillStyle = '#000';
-    ctx.font = '15px Calibri';
+    ctx.font = '15px '+prop.renderFont;
     let text = txt[t];
-    ctx.fillText(text, canvas.width-(text.length*7), canvas.height-((15*t)+10));
+    ctx.fillText(text, canvas.width-(text.length*10), canvas.height-((15*t)+10));
   }
 }

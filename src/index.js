@@ -3,6 +3,7 @@ import {Store} from './globals';
 import {canvas} from './canvas';
 import {writeText} from './utils';
 import {initNeat, startEvaluation, endEvaluation, neat} from './genetics';
+import Food from './food';
 
 canvas.width = prop.world.width;
 canvas.height = prop.world.height;
@@ -21,6 +22,10 @@ function init() {
   initNeat();
 
   for (let i = 0; i < 1; i++) neat.mutate();
+
+  for (let f=0; f<prop.foodAmount; f++) {
+    new Food();
+  }
 
   startEvaluation();
 }

@@ -1,6 +1,5 @@
 import prop from './properties';
-import Creature from './creature';
-import {foods} from './globals';
+import {Store} from './globals';
 import {canvas} from './canvas';
 import {writeText} from './utils';
 
@@ -8,9 +7,9 @@ canvas.width = prop.world.width;
 canvas.height = prop.world.height;
 
 function update(sec) {
-  for (let e=0; e<foods.length; e++) {
-    if (foods[e].alive) {
-      foods[e].update(sec);
+  for (let e=0; e<Store.foods.length; e++) {
+    if (Store.foods[e].alive) {
+      Store.foods[e].update(sec);
     }
   }
 }
@@ -19,9 +18,9 @@ function render() {
   let ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (let e=0; e<foods.length; e++) {
-    if (foods[e].alive) {
-      foods[e].render(canvas);
+  for (let e=0; e<Store.foods.length; e++) {
+    if (Store.foods[e].alive) {
+      Store.foods[e].render(canvas);
     }
   }
   writeText(canvas, [Math.round(fps).toString()]);

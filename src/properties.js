@@ -12,14 +12,15 @@ let prop = {
   creatureAmount: 150,
 
   // NEAT settings
-  elitismPercent: 0.5,
-  mutationRate: 0.01,
+  elitismPercent: 0.1,
+  mutationRate: 0.3,
   medialNeurons: 40,
 
   timeout: 50,
 
   // Rendering
   renderFont: 'Calibri',
+  renderReceptors: false,
 
   // Fitness rules
   movementNeedsEnergy: false,

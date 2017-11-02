@@ -1,6 +1,7 @@
 import prop from './properties';
 import {random, Vector, radialCoords, drawCircle} from './utils';
 import {Store} from './globals';
+import {canvas} from './canvas';
 
 export default class Creature {
   constructor(genome) {
@@ -184,9 +185,7 @@ export default class Creature {
    * 
    * @param {HTMLCanvasElement} canvas 
    */
-  render(canvas) {
-    let ctx = canvas.getContext('2d');
-
+  render(ctx) {
     let opacity = 1;
 
     // Render receptors
@@ -198,24 +197,17 @@ export default class Creature {
       for (let r of this.receptors) {
         if (prop.renderReceptors) {
           ctx.beginPath();
-          ctx.moveTo(
-            this.location.x-canvas.screenOffset.x,
-            this.location.y-canvas.screenOffset.y);
-          ctx.lineTo(
-            r.location.x-canvas.screenOffset.x,
-            r.location.y-canvas.screenOffset.y);
+          ctx.moveTo(this.location.x, this.location.y);
+          ctx.lineTo(r.location.x, r.location.y);
           ctx.stroke();
 
-          drawCircle(ctx,
-            r.location.x-canvas.screenOffset.x,
-            r.location.y-canvas.screenOffset.y,
-            this.size/2);
+          drawCircle(ctx, r.location.x, r.location.y, this.size/2);
           ctx.fill();
         }
 
         if (prop.renderReceptorScent) {
-          let x = r.location.x-canvas.screenOffset.x;
-          let y = r.location.y-canvas.screenOffset.y;
+          let x = r.location.x;
+          let y = r.location.y;
           let radius = (r.scent / this.highestScent) * this.size * 5;
           if (this.highestScent > 0) {
             let gradient = ctx.createRadialGradient(x, y, radius, x, y, 0);
@@ -233,20 +225,14 @@ export default class Creature {
     // Render core
     ctx.fillStyle = 'rgba('+color[0]+','+color[1]+','+color[2]+','+opacity+')';
     ctx.strokeStyle = 'rgba(50,50,50,'+opacity+')';
-    drawCircle(ctx,
-      this.location.x-canvas.screenOffset.x,
-      this.location.y-canvas.screenOffset.y,
-      this.size);
+    drawCircle(ctx, this.location.x, this.location.y, this.size);
     ctx.fill();
     ctx.stroke();
 
     // Render head
     if (prop.renderHead) {
       ctx.fillStyle = 'rgba(50,50,50,'+opacity+')';
-      drawCircle(ctx,
-        this.head.x-canvas.screenOffset.x,
-        this.head.y-canvas.screenOffset.y,
-        this.size/2);
+      drawCircle(ctx, this.head.x, this.head.y, this.size/2);
       ctx.fill();
     }
   }

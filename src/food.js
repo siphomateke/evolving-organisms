@@ -1,6 +1,7 @@
 import {Vector, random} from './utils';
 import prop from './properties';
 import {Store} from './globals';
+import {canvas} from './canvas';
 
 export default class Food {
   constructor() {
@@ -18,14 +19,11 @@ export default class Food {
   update(sec) {
 
   }
-  render(canvas) {
-    let ctx = canvas.getContext('2d');
+  render(ctx) {
     ctx.strokeStyle = 'rgba(50,50,50,1)';
     ctx.fillStyle = '#ff0';
     ctx.beginPath();
-    ctx.arc(
-      this.location.x-canvas.screenOffset.x,
-      this.location.y-canvas.screenOffset.y, this.size, 0, Math.PI*2);
+    ctx.arc(this.location.x, this.location.y, this.size, 0, Math.PI*2);
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = '#ffffff';

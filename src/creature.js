@@ -1,5 +1,5 @@
 import prop from './properties';
-import {random, Vector, radialCoords, drawCircle} from './utils';
+import {random, Vector, radialCoords, drawCircle, toRadians} from './utils';
 import {Store} from './globals';
 
 export default class Creature {
@@ -45,6 +45,10 @@ export default class Creature {
     this.head = new Vector(
       radialCoords(this.angle-90, this.size/2).x+this.location.x,
       radialCoords(this.angle-90, this.size/2).y+this.location.y);
+  }
+
+  get angleRadians() {
+    return toRadians(this.angle);
   }
 
   reset() {
@@ -220,6 +224,18 @@ export default class Creature {
           ctx.fill();
         }
       }
+    }
+
+    if (prop.renderLifetime) {
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(this.location.x, this.location.y);
+      let lifeTimeRatio = this.lifeTime / prop.creatureLifeTime;
+      ctx.arc(
+        this.location.x, this.location.y,
+        (3*this.size)/2, - Math.PI / 2,
+        (lifeTimeRatio * Math.PI * 2) - (Math.PI/2));
+      ctx.fill();
     }
 
     let color = this.fitnessColor(this.brain.score, Store.highestScore);

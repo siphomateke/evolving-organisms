@@ -31,6 +31,9 @@ let prop = {
 
   // Food global variables
   foodAmount: 50,
+  /** 
+   * Radius of foods in pixels. 
+   * Also decides how much extra time it gives an organism in seconds */
   foodSize: 5,
   debug: false,
   world: {

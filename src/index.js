@@ -72,7 +72,10 @@ function render() {
     }
   }
 
-  writeText(canvas, [Math.round(fps).toString()]);
+  writeText(canvas, [
+    'FPS: '+Math.round(fps).toString(),
+    'Time remaining: '+Math.round(prop.timeout - timer)+'s',
+  ]);
 }
 
 function mainLoop() {

@@ -37,6 +37,8 @@ let prop = {
    * Radius of foods in pixels. 
    * Also decides how much extra time it gives an organism in seconds */
   foodSize: 5,
+  foodSpeed: 10,
+
   debug: false,
   world: {
     width: 900,

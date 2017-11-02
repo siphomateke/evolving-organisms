@@ -1,5 +1,5 @@
 import prop from './properties';
-import {random, randomF, Vector, radialCoords} from './utils';
+import {random, Vector, radialCoords, drawCircle} from './utils';
 import {Store} from './globals';
 import {neat} from './genetics';
 
@@ -194,32 +194,33 @@ export default class Creature {
           this.receptors[r].location.x-canvas.screenOffset.x,
           this.receptors[r].location.y-canvas.screenOffset.y);
         ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(
+
+        drawCircle(ctx,
           this.receptors[r].location.x-canvas.screenOffset.x,
-          this.receptors[r].location.y-canvas.screenOffset.y, (this.size/2), 0, Math.PI*2);
+          this.receptors[r].location.y-canvas.screenOffset.y,
+          this.size/2);
         ctx.fill();
       }
     }
 
     let color = this.fitnessColor(this.brain.score, Store.highestScore);
     // Render core
-    ctx.beginPath();
     ctx.fillStyle = 'rgba('+color[0]+','+color[1]+','+color[2]+','+opacity+')';
     ctx.strokeStyle = 'rgba(50,50,50,'+opacity+')';
-    ctx.arc(
+    drawCircle(ctx,
       this.location.x-canvas.screenOffset.x,
-      this.location.y-canvas.screenOffset.y, this.size, 0, Math.PI*2);
+      this.location.y-canvas.screenOffset.y,
+      this.size);
     ctx.fill();
     ctx.stroke();
 
     // Render head
     if (prop.renderHead) {
       ctx.fillStyle = 'rgba(50,50,50,'+opacity+')';
-      ctx.beginPath();
-      ctx.arc(
+      drawCircle(ctx,
         this.head.x-canvas.screenOffset.x,
-        this.head.y-canvas.screenOffset.y, this.size/2, 0, Math.PI*2);
+        this.head.y-canvas.screenOffset.y,
+        this.size/2);
       ctx.fill();
     }
   }

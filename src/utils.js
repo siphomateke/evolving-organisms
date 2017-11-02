@@ -159,3 +159,8 @@ export function writeText(canvas, txt) {
     ctx.fillText(text, canvas.width-(text.length*10), canvas.height-((15*t)+10));
   }
 }
+
+export function drawCircle(ctx, x, y, r) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI*2);
+}

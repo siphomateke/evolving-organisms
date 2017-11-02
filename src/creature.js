@@ -56,21 +56,17 @@ export default class Creature {
 
   getFitness() {
     // fitness is how long the organism lived plus how long it would have lived
-    // minus how long they live by default
-    return (this.age+this.lifeTime-prop.creatureLifeTime) / prop.timeout;
+    let fitness = ((this.age+this.lifeTime) / prop.timeout);
+    if (fitness < 0) {
+      fitness = 0;
+    }
+    return fitness;
   }
 
   update(sec) {
     let ms = sec*1000;
 
     let input = this.sense();
-    input.concat([
-      this.velocity.x,
-      this.velocity.y,
-      this.lifeTime,
-      this.angle,
-      this.angularVelocity,
-    ]);
     let output = this.brain.activate(input);
 
     if (this.angularForce<prop.maxRotationForce) {

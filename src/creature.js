@@ -1,6 +1,7 @@
 import prop from './properties';
 import {random, Vector, radialCoords, drawCircle, toRadians} from './utils';
 import {Store} from './globals';
+import {ReceptorManager} from './receptor';
 
 export default class Creature {
   constructor(genome) {
@@ -25,23 +26,8 @@ export default class Creature {
     this.angularAcceleration = 0;
     this.angularForce = 0;
 
-    // Receptors
-    this.highestScent = 0;
-    this.receptors = [];
-    for (let r=0; r<prop.numReceptors; r++) {
-      let theta = this.angle+90+((360/prop.numReceptors)*r);
-      this.receptors[r] = {};
-      // if (r%2==0) {
-      this.receptors[r].type = 0;
-      /* }
-      else {
-        this.receptors[r].type = 1;
-      }*/
-      this.receptors[r].location = new Vector(
-        radialCoords(theta, prop.receptorLen).x+this.location.x,
-        radialCoords(theta, prop.receptorLen).y+this.location.y);
-      this.receptors[r].scent = 0;
-    }
+    this.receptors = new ReceptorManager(prop.numReceptors, prop.receptorLen);
+    this.receptors.init(this);
     this.head = new Vector(
       radialCoords(this.angle-90, this.size/2).x+this.location.x,
       radialCoords(this.angle-90, this.size/2).y+this.location.y);
@@ -62,8 +48,8 @@ export default class Creature {
 
   sense() {
     let input = [];
-    for (let r=0; r<this.receptors.length; r++) {
-      input[r] = this.receptors[r].scent;
+    for (let r=0; r<this.receptors.numberOfReceptors; r++) {
+      input[r] = this.receptors.list[r].scent;
     }
     return input;
   }
@@ -78,6 +64,13 @@ export default class Creature {
     let ms = sec*1000;
 
     let input = this.sense();
+    input.concat([
+      this.velocity.x,
+      this.velocity.y,
+      this.lifeTime,
+      this.angle,
+      this.angularVelocity,
+    ]);
     let output = this.brain.activate(input);
 
     if (this.angularForce<prop.maxRotationForce) {
@@ -144,28 +137,7 @@ export default class Creature {
     this.velocity = this.velocity.mult(0.95);
     this.location = this.location.add(this.velocity);
 
-    // Update receptor and tail position
-    this.highestScent = 0;
-    for (let r=0; r<prop.numReceptors; r++) {
-      let theta = this.angle+90+((360/prop.numReceptors)*r);
-      this.receptors[r].location = new Vector(
-        radialCoords(theta, prop.receptorLen).x+this.location.x,
-        radialCoords(theta, prop.receptorLen).y+this.location.y);
-      let totalScent = 0;
-      if (this.receptors[r].type == 0) {
-        for (let f=0; f<Store.foods.length; f++) {
-          totalScent+=1/Math.pow(this.receptors[r].location.sub(Store.foods[f].location).mag()*0.01, 3);
-        }
-      } else {
-        for (let f=0; f<Store.creatures.length; f++) {
-          totalScent+=1/Math.pow(this.receptors[r].location.sub(Store.creatures[f].location).mag()*0.01, 3);
-        }
-      }
-      this.receptors[r].scent = totalScent;
-      if (this.receptors[r].scent > this.highestScent) {
-        this.highestScent = this.receptors[r].scent;
-      }
-    }
+    this.receptors.update(sec, this);
     this.head = new Vector(radialCoords(this.angle-90, this.size/2).x+this.location.x, radialCoords(this.angle-90, this.size/2).y+this.location.y);
   }
 
@@ -193,38 +165,7 @@ export default class Creature {
   render(ctx) {
     let opacity = 1;
 
-    // Render receptors
-    if (prop.renderReceptors) {
-      ctx.strokeStyle = 'rgba(0,0,0,'+opacity+')';
-      ctx.fillStyle = 'rgba(200,200,0,'+opacity+')';
-    }
-    if (prop.renderReceptors || prop.renderReceptorScent) {
-      for (let r of this.receptors) {
-        if (prop.renderReceptors) {
-          ctx.beginPath();
-          ctx.moveTo(this.location.x, this.location.y);
-          ctx.lineTo(r.location.x, r.location.y);
-          ctx.stroke();
-
-          drawCircle(ctx, r.location.x, r.location.y, this.size/2);
-          ctx.fill();
-        }
-
-        if (prop.renderReceptorScent) {
-          let x = r.location.x;
-          let y = r.location.y;
-          let radius = (r.scent / this.highestScent) * this.size * 5;
-          if (this.highestScent > 0) {
-            let gradient = ctx.createRadialGradient(x, y, radius, x, y, 0);
-            gradient.addColorStop(0, 'rgba(255,255,255,0)');
-            gradient.addColorStop(1, 'rgba(0,0,255,0.5)');
-            ctx.fillStyle = gradient;
-          }
-          drawCircle(ctx, x, y, radius);
-          ctx.fill();
-        }
-      }
-    }
+    this.receptors.render(ctx, this, opacity);
 
     if (prop.renderLifetime) {
       ctx.fillStyle = 'rgba(0,0,0,0.5)';

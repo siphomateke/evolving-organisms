@@ -101,8 +101,11 @@ function render() {
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+  let targetFps = 1000/timestep;
+  let renderFps = prop.accelerated ? fps / prop.acceleration : fps;
   writeText(canvas, [
-    'FPS: '+Math.round(fps).toString(),
+    'FPS: '+Math.round(renderFps).toString(),
+    'Desired fps: '+Math.round(targetFps),
     'Time remaining: '+Math.round(prop.timeout - timer)+'s',
   ]);
 }

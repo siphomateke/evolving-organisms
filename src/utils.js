@@ -156,7 +156,7 @@ export function writeText(canvas, txt) {
     ctx.fillStyle = '#000';
     ctx.font = '15px '+prop.renderFont;
     let text = txt[t];
-    ctx.fillText(text, canvas.width-(text.length*10), canvas.height-((15*t)+10));
+    ctx.fillText(text, canvas.width-(text.length*7), canvas.height-((15*t)+10));
   }
 }
 

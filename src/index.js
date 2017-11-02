@@ -47,21 +47,23 @@ function update(sec) {
       anyAlive = true;
       creature.update(sec);
 
-      if (creature.brain.score === Store.highestScore) {
+      if (prop.followBestCreature && creature.brain.score === Store.highestScore) {
         targetCreature = creature;
       }
     }
   }
 
-  if (targetCreature) {
-    if (targetCreature.alive) {
-      targetOffset.x = targetCreature.location.x - (canvas.width/2);
-      targetOffset.y = targetCreature.location.y - (canvas.height/2);
+  if (prop.followBestCreature) {
+    if (targetCreature) {
+      if (targetCreature.alive) {
+        targetOffset.x = targetCreature.location.x - (canvas.width/2);
+        targetOffset.y = targetCreature.location.y - (canvas.height/2);
+      } else {
+        targetCreature = null;
+      }
     } else {
-      targetCreature = null;
+      targetOffset = new Vector();
     }
-  } else {
-    targetOffset = new Vector();
   }
   canvas.screenOffset.x += (targetOffset.x-canvas.screenOffset.x)/10;
   canvas.screenOffset.y += (targetOffset.y-canvas.screenOffset.y)/10;

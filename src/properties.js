@@ -25,6 +25,7 @@ let prop = {
   renderReceptors: false,
   renderReceptorScent: false,
   renderHead: true,
+  followBestCreature: false,
 
   // Fitness rules
   movementNeedsEnergy: false,

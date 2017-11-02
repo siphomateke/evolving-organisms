@@ -2,8 +2,8 @@ let prop = {
   accelerated: false,
   acceleration: 40,
   slowDownOnGeneration: 50,
-  noOutputs: 3,
-  noReceptors: 3,
+  numOutputs: 3,
+  numReceptors: 3,
   receptorLen: 20,
   creatureSpeed: 0.05,
   maxRotationForce: 5,
@@ -40,5 +40,6 @@ let prop = {
 };
 
 prop.minFitnessRender = prop.creatureLifeTime*2;
+prop.numInputs = prop.numReceptors;
 
 export default prop;

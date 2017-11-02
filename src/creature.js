@@ -29,8 +29,8 @@ export default class Creature {
     // Receptors
     this.highestScent = 0;
     this.receptors = [];
-    for (let r=0; r<prop.noReceptors; r++) {
-      let theta = this.angle+90+((360/prop.noReceptors)*r);
+    for (let r=0; r<prop.numReceptors; r++) {
+      let theta = this.angle+90+((360/prop.numReceptors)*r);
       this.receptors[r] = {};
       // if (r%2==0) {
       this.receptors[r].type = 0;
@@ -141,8 +141,8 @@ export default class Creature {
 
     // Update receptor and tail position
     this.highestScent = 0;
-    for (let r=0; r<prop.noReceptors; r++) {
-      let theta = this.angle+90+((360/prop.noReceptors)*r);
+    for (let r=0; r<prop.numReceptors; r++) {
+      let theta = this.angle+90+((360/prop.numReceptors)*r);
       this.receptors[r].location = new Vector(
         radialCoords(theta, prop.receptorLen).x+this.location.x,
         radialCoords(theta, prop.receptorLen).y+this.location.y);

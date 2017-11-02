@@ -65,7 +65,9 @@ export default class Creature {
   }
 
   getFitness() {
-    return ((this.age/prop.timeout)+(this.lifeTime/prop.creatureLifeTime))/2;
+    // fitness is how long the organism lived plus how long it would have lived
+    // minus how long they live by default
+    return (this.age+this.lifeTime-prop.creatureLifeTime) / prop.timeout;
   }
 
   update(sec) {

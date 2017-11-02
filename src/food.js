@@ -1,7 +1,6 @@
 import {Vector, random} from './utils';
 import prop from './properties';
 import {Store} from './globals';
-import {canvas} from './canvas';
 
 export default class Food {
   constructor() {
@@ -19,6 +18,10 @@ export default class Food {
   update(sec) {
 
   }
+  /**
+  * 
+  * @param {CanvasRenderingContext2D} ctx
+  */
   render(ctx) {
     ctx.strokeStyle = 'rgba(50,50,50,1)';
     ctx.fillStyle = '#ff0';

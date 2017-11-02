@@ -1,7 +1,6 @@
 import prop from './properties';
 import {random, Vector, radialCoords, drawCircle} from './utils';
 import {Store} from './globals';
-import {canvas} from './canvas';
 
 export default class Creature {
   constructor(genome) {
@@ -183,7 +182,7 @@ export default class Creature {
 
   /**
    * 
-   * @param {HTMLCanvasElement} canvas 
+   * @param {CanvasRenderingContext2D} ctx
    */
   render(ctx) {
     let opacity = 1;

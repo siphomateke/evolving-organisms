@@ -1,7 +1,6 @@
 import prop from './properties';
 import {random, Vector, radialCoords, drawCircle} from './utils';
 import {Store} from './globals';
-import {neat} from './genetics';
 
 export default class Creature {
   constructor(genome) {

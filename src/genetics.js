@@ -4,11 +4,42 @@ import Creature from './creature';
 import {Store} from './globals';
 
 export let neat = null;
+let Activation = neataptic.methods.activation;
+let Mutation = neataptic.methods.mutation;
 export function initNeat() {
-  neataptic.methods.mutation.MOD_ACTIVATION.mutateOutput = false;
-  neataptic.methods.mutation.SWAP_NODES.mutateOutput = false;
+  Mutation.MOD_ACTIVATION.mutateOutput = false;
+  Mutation.SWAP_NODES.mutateOutput = false;
+  Mutation.MOD_ACTIVATION.allowed = [
+    Activation.LOGISTIC,
+    Activation.TANH,
+    // Activation.RELU,
+    // Activation.IDENTITY,
+    Activation.STEP,
+    // Activation.SOFTSIGN,
+    // Activation.SINUSOID,
+    Activation.GAUSSIAN,
+    // Activation.BENT_IDENTITY,
+    Activation.BIPOLAR,
+    Activation.BIPOLAR_SIGMOID,
+    Activation.HARD_TANH,
+    // Activation.ABSOLUTE
+  ];
   neat = new neataptic.Neat(prop.numInputs, prop.numOutputs, null, {
-    mutation: neataptic.methods.mutation.ALL,
+    mutation: [
+      Mutation.ADD_NODE,
+      Mutation.SUB_NODE,
+      Mutation.ADD_CONN,
+      Mutation.SUB_CONN,
+      Mutation.MOD_WEIGHT,
+      Mutation.MOD_BIAS,
+      Mutation.MOD_ACTIVATION,
+      Mutation.ADD_GATE,
+      Mutation.SUB_GATE,
+      Mutation.ADD_SELF_CONN,
+      Mutation.SUB_SELF_CONN,
+      Mutation.ADD_BACK_CONN,
+      Mutation.SUB_BACK_CONN,
+    ],
     popsize: prop.creatureAmount,
     mutationRate: prop.mutationRate,
     elitism: Math.round(prop.elitismPercent * prop.creatureAmount),

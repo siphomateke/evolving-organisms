@@ -23,6 +23,7 @@ let prop = {
   // Rendering
   renderFont: 'Calibri',
   renderReceptors: false,
+  renderReceptorScent: false,
   renderHead: true,
 
   // Fitness rules

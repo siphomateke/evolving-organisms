@@ -27,6 +27,7 @@ export default class Creature {
     this.angularForce = 0;
 
     // Receptors
+    this.highestScent = 0;
     this.receptors = [];
     for (let r=0; r<prop.noReceptors; r++) {
       let theta = this.angle+90+((360/prop.noReceptors)*r);
@@ -139,6 +140,7 @@ export default class Creature {
     this.location = this.location.add(this.velocity);
 
     // Update receptor and tail position
+    this.highestScent = 0;
     for (let r=0; r<prop.noReceptors; r++) {
       let theta = this.angle+90+((360/prop.noReceptors)*r);
       this.receptors[r].location = new Vector(
@@ -155,6 +157,9 @@ export default class Creature {
         }
       }
       this.receptors[r].scent = totalScent;
+      if (this.receptors[r].scent > this.highestScent) {
+        this.highestScent = this.receptors[r].scent;
+      }
     }
     this.head = new Vector(radialCoords(this.angle-90, this.size/2).x+this.location.x, radialCoords(this.angle-90, this.size/2).y+this.location.y);
   }
@@ -176,6 +181,10 @@ export default class Creature {
     return color;
   }
 
+  /**
+   * 
+   * @param {HTMLCanvasElement} canvas 
+   */
   render(canvas) {
     let ctx = canvas.getContext('2d');
 
@@ -185,21 +194,39 @@ export default class Creature {
     if (prop.renderReceptors) {
       ctx.strokeStyle = 'rgba(0,0,0,'+opacity+')';
       ctx.fillStyle = 'rgba(200,200,0,'+opacity+')';
-      for (let r=0; r<this.receptors.length; r++) {
-        ctx.beginPath();
-        ctx.moveTo(
-          this.location.x-canvas.screenOffset.x,
-          this.location.y-canvas.screenOffset.y);
-        ctx.lineTo(
-          this.receptors[r].location.x-canvas.screenOffset.x,
-          this.receptors[r].location.y-canvas.screenOffset.y);
-        ctx.stroke();
+    }
+    if (prop.renderReceptors || prop.renderReceptorScent) {
+      for (let r of this.receptors) {
+        if (prop.renderReceptors) {
+          ctx.beginPath();
+          ctx.moveTo(
+            this.location.x-canvas.screenOffset.x,
+            this.location.y-canvas.screenOffset.y);
+          ctx.lineTo(
+            r.location.x-canvas.screenOffset.x,
+            r.location.y-canvas.screenOffset.y);
+          ctx.stroke();
 
-        drawCircle(ctx,
-          this.receptors[r].location.x-canvas.screenOffset.x,
-          this.receptors[r].location.y-canvas.screenOffset.y,
-          this.size/2);
-        ctx.fill();
+          drawCircle(ctx,
+            r.location.x-canvas.screenOffset.x,
+            r.location.y-canvas.screenOffset.y,
+            this.size/2);
+          ctx.fill();
+        }
+
+        if (prop.renderReceptorScent) {
+          let x = r.location.x-canvas.screenOffset.x;
+          let y = r.location.y-canvas.screenOffset.y;
+          let radius = (r.scent / this.highestScent) * this.size * 5;
+          if (this.highestScent > 0) {
+            let gradient = ctx.createRadialGradient(x, y, radius, x, y, 0);
+            gradient.addColorStop(0, 'rgba(255,255,255,0)');
+            gradient.addColorStop(1, 'rgba(0,0,255,0.5)');
+            ctx.fillStyle = gradient;
+          }
+          drawCircle(ctx, x, y, radius);
+          ctx.fill();
+        }
       }
     }
 

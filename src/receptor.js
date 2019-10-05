@@ -1,7 +1,7 @@
 import {Vector, radialCoords, drawCircle} from './utils';
 import {Store} from './globals';
 import prop from './properties';
-import {Creature} from './creature';
+import Creature from './creature';
 
 export class Receptor {
   constructor(type = 0) {
@@ -17,10 +17,14 @@ export class ReceptorManager {
     this.receptorLen = receptorLen;
     /** @type {Receptor[]} */
     this.list = [];
-    this.highestScent = 0;
+    this.highestScent = {};
 
     for (let r=0; r<this.numberOfReceptors; r++) {
-      let type = r % 2 === 0 ? 0 : 1;
+      // let type = r % 2 === 0 ? 0 : 1;
+      let type = 0;
+      if (!(type in this.highestScent)) {
+        this.highestScent[type] = 0;
+      }
       this.list[r] = new Receptor(type);
     }
   }
@@ -54,23 +58,34 @@ export class ReceptorManager {
    */
   update(sec, creature) {
     this.updateLocation(creature.location, creature.angle);
+
+    for (let type in this.highestScent) {
+      if (Object.prototype.hasOwnProperty.call(this.highestScent, type)) {
+        this.highestScent[type] = 0;
+      }
+    }
+
+    let maxWorldSize = Math.max(prop.world.width, prop.world.height);
     for (let i=0; i<this.numberOfReceptors; i++) {
       let receptor = this.list[i];
       let scent = 0;
       if (receptor.type === 0) {
         for (let f=0; f<Store.foods.length; f++) {
-          scent+=1/Math.pow(
-            receptor.location.sub(Store.foods[f].location).mag()*0.01, 3);
+          scent+=1/Math.pow(receptor.location.sub(Store.foods[f].location).mag()*Store.foods[f].size*0.0001, 2);
+          /* let pow = 20;
+          scent += Math.pow(maxWorldSize - receptor.location.sub(Store.foods[f].location).mag(), pow) / (Math.pow(maxWorldSize, pow)); */
         }
+        // scent /= Store.foods.length;
       } else if (receptor.type === 1) {
         for (let f=0; f<Store.creatures.length; f++) {
           scent+=1/Math.pow(
             receptor.location.sub(Store.creatures[f].location).mag()*0.01, 3);
         }
       }
+
       receptor.scent = scent;
-      if (receptor.scent > this.highestScent) {
-        this.highestScent = receptor.scent;
+      if (receptor.scent > this.highestScent[receptor.type]) {
+        this.highestScent[receptor.type] = receptor.scent;
       }
     }
   }
@@ -104,15 +119,15 @@ export class ReceptorManager {
         if (prop.renderReceptorScent) {
           let x = r.location.x;
           let y = r.location.y;
-          let radius = (r.scent / this.highestScent) * creature.size * 5;
-          if (this.highestScent > 0) {
+          if (this.highestScent[r.type] > 0) {
+            let radius = (r.scent / this.highestScent[r.type]) * creature.size * 5;
             let gradient = ctx.createRadialGradient(x, y, radius, x, y, 0);
             gradient.addColorStop(0, 'rgba(255,255,255,0)');
             gradient.addColorStop(1, 'rgba(0,0,255,0.5)');
             ctx.fillStyle = gradient;
+            drawCircle(ctx, x, y, radius);
+            ctx.fill();
           }
-          drawCircle(ctx, x, y, radius);
-          ctx.fill();
         }
       }
     }

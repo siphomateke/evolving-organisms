@@ -1,5 +1,5 @@
 let prop = {
-  accelerated: false,
+  accelerated: true,
   acceleration: 40,
   slowDownOnGeneration: 50,
   numOutputs: 3,
@@ -8,17 +8,18 @@ let prop = {
   creatureSpeed: 0.05,
   maxRotationForce: 5,
   creatureLifeTime: 10,
+  creatureAmount: 50,
 
-  creatureAmount: 100,
+  creaturesCanCollide: false,
 
   // NEAT settings
   elitismPercent: 0.1,
   mutationRate: 0.3,
   /** The number of times the population will be mutated initially */
   initialMutation: 100,
-  medialNeurons: 40,
+  medialNeurons: 5,
 
-  timeout: 50,
+  timeout: 60,
 
   // Rendering
   renderFont: 'Calibri',
@@ -29,10 +30,16 @@ let prop = {
   followBestCreature: false,
 
   // Fitness rules
+  eatFood: true,
   movementNeedsEnergy: false,
+  avoidCreatures: false,
+  hugOtherCreatures: false,
+  favorCollision: false,
+  avoidCollision: false,
+  dieOnCollision: false,
 
   // Food global variables
-  foodAmount: 50,
+  foodAmount: 30,
   /** 
    * Radius of foods in pixels. 
    * Also decides how much extra time it gives an organism in seconds */
@@ -46,6 +53,7 @@ let prop = {
   },
 };
 
+// TODO: use this
 prop.minFitnessRender = prop.creatureLifeTime*2;
 prop.numInputs = prop.numReceptors;
 
